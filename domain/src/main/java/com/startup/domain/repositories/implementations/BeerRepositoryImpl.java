@@ -8,8 +8,16 @@ import com.startup.domain.converters.BeerConverterImpl;
 import com.startup.domain.models.Beer;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.internal.operators.observable.ObservableToList;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class BeerRepositoryImpl {
 
@@ -20,16 +28,18 @@ public class BeerRepositoryImpl {
         this.beerConverter = beerConverter;
     }
 
-    public ArrayList<Beer> getBeers(){
-        ArrayList<BeerApi> beerApiArrayList = beerProvider.getBeerApiArrayList();
+    public Observable<ArrayList<Beer>> getBeers(){
+        Observable<ArrayList<BeerApi>> beerApiArrayList = beerProvider.getBeerApiArrayList();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            List<Beer> collect = beerApiArrayList.stream()
-                    .map(beerApi -> beerConverter.fromApiToUI(beerApi))
-                    .collect(Collectors.toList());
+        return beerApiArrayList.subscribeOn(Schedulers.io())
+                .flatMap(beerApis -> Observable.fromArray(getBeerArrayList(beerApis)));
+    }
 
-            return (ArrayList<Beer>) collect;
+    private ArrayList<Beer> getBeerArrayList(ArrayList<BeerApi> beerApis){
+        ArrayList<Beer> result = new ArrayList<>();
+        for (BeerApi beerApi: beerApis){
+            result.add(beerConverter.fromApiToUI(beerApi));
         }
-        return null;
+        return result;
     }
 }
