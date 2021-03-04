@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
 import com.startup.beerbook.databinding.CellBeerBinding;
 import com.startup.domain.models.Beer;
 
@@ -48,8 +49,12 @@ public class BeerAdapter extends RecyclerView.Adapter<BeerAdapter.ViewHolder> {
         }
 
         public void bind(Beer beer){
-            binding.cellBeerId.setText("fghfghfghf");
+            binding.cellBeerId.setText(String.valueOf(beer.getId()));
+            Picasso.get()
+                    .load(beer.getImageUrl())
+                    .into(binding.cellBeerImage);
             binding.cellBeerName.setText(beer.getName());
+            binding.cellBeerDescription.setText(beer.getDescription());
         }
     }
 
