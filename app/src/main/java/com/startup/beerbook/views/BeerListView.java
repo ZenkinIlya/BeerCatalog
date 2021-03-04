@@ -12,4 +12,5 @@ import moxy.viewstate.strategy.StateStrategyType;
 public interface BeerListView extends MvpView {
     void presentBeers(ArrayList<Beer> beerArrayList);
     void presentLoading();
+    void presentToast(String message);
 }

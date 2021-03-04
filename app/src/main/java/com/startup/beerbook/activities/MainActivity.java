@@ -2,6 +2,7 @@ package com.startup.beerbook.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -33,7 +34,13 @@ public class MainActivity extends MvpAppCompatActivity implements BeerListView {
 
         setupAdapter();
 
+        componentListener();
+
         beerListPresenter.getBeerList();
+    }
+
+    private void componentListener() {
+        binding.mainRefresh.setOnClickListener(view -> beerListPresenter.getBeerList());
     }
 
     private void setupAdapter() {
@@ -53,5 +60,10 @@ public class MainActivity extends MvpAppCompatActivity implements BeerListView {
     public void presentLoading() {
         binding.mainRecyclerView.setVisibility(View.GONE);
         binding.mainLoading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void presentToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
