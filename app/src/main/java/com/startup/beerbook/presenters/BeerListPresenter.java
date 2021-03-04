@@ -26,12 +26,12 @@ public class BeerListPresenter extends MvpPresenter<BeerListView> {
     public void getBeerList(){
 
         getViewState().presentLoading();
-        Observable<ArrayList<Beer>> arrayListObservable = repository.getBeers();
+        Observable<List<Beer>> arrayListObservable = repository.getBeers();
 
         arrayListObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(beers -> getViewState().presentBeers(beers));
+                .subscribe(beers -> getViewState().presentBeers((ArrayList<Beer>) beers));
 
     }
 }
